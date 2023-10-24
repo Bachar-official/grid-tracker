@@ -16,11 +16,8 @@ class SettingsScreen extends ConsumerWidget {
     final state = ref.watch(provider);
     final manager = di.settingsManager;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Padding(
+    return Drawer(
+      child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Form(
@@ -42,7 +39,10 @@ class SettingsScreen extends ConsumerWidget {
                   onChanged: manager.setPort,
                 ),
                 ElevatedButton(
-                  onPressed: manager.setAddress,
+                  onPressed: () {
+                    manager.setAddress();
+                    Navigator.pop(context);
+                  },
                   child: Text(manager.isConnected ? 'Disconnect' : 'Connect'),
                 ),
               ],

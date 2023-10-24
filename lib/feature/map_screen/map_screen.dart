@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
+import 'package:grid_tracker/feature/settings/settings_screen.dart';
 import 'package:latlong2/latlong.dart';
 
 final provider =
@@ -18,6 +19,7 @@ class MapScreen extends ConsumerWidget {
     final manager = di.mapManager;
 
     return Scaffold(
+      drawer: const SettingsScreen(),
       appBar: AppBar(
         title: Badge(
           backgroundColor: state.isConnected ? Colors.green : Colors.red,
@@ -35,6 +37,7 @@ class MapScreen extends ConsumerWidget {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'dev.fleaflet.flutter_map.example',
           ),
+          MarkerLayer(markers: state.markers),
         ],
       ),
     );

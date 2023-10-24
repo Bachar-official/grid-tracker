@@ -24,10 +24,9 @@ class HomeScreen extends ConsumerWidget {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.map), label: 'Map'),
           NavigationDestination(icon: Icon(Icons.history), label: 'History'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
-      body: const [MapScreen(), HistoryScreen(), SettingsScreen()][state.page],
+      body: const [MapScreen(), HistoryScreen()][state.page],
     );
   }
 }

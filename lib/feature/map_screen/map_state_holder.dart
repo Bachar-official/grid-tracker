@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -13,6 +14,27 @@ class MapStateHolder extends StateNotifier<MapState> {
       state = state.copyWith(nullSocket: true, socket: null);
     } else {
       state = state.copyWith(socket: socket);
+    }
+  }
+
+  void setMarkers(List<Marker> markers) {
+    state = state.copyWith(markers: markers);
+  }
+
+  void clearMarkers() {
+    state = state.copyWith(markers: []);
+  }
+
+  void addMarker(Marker marker) {
+    List<Marker> markers = state.markers;
+    final index = markers.indexWhere((element) => element.key == marker.key);
+    if (index != -1) {
+      markers.removeAt(index);
+      markers.add(marker);
+      state = state.copyWith(markers: markers);
+    } else {
+      List<Marker> newMarkers = [...state.markers, marker];
+      state = state.copyWith(markers: newMarkers);
     }
   }
 }
