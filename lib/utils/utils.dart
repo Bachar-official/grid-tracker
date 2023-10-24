@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_tracker/data/entity/call_reason.dart';
+import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
 
 void showSnackBar(
     GlobalKey<ScaffoldMessengerState> key, Color color, String message) {
@@ -9,36 +10,48 @@ void showSnackBar(
   ));
 }
 
-Widget getMapIcon(CallReason? reason, {String? callsign}) {
+Widget getMapIcon(CallReason? reason,
+    {String? callsign, required Key key, required Function(Key) onEnd}) {
   switch (reason) {
     case CallReason.service:
       return callsign != null
-          ? Tooltip(
-              message: callsign,
-              child: const Icon(
+          ? FadedWidget(
+              onEnd: () => onEnd(key),
+              child: Tooltip(
+                message: callsign,
+                child: const Icon(
+                  Icons.home,
+                  color: Colors.orange,
+                ),
+              ),
+            )
+          : const FadedWidget(
+              child: Icon(
                 Icons.home,
                 color: Colors.orange,
               ),
-            )
-          : const Icon(
-              Icons.home,
-              color: Colors.orange,
             );
     case CallReason.cq:
       return callsign != null
-          ? Tooltip(
-              message: callsign,
-              child: const Icon(Icons.cell_tower, color: Colors.red),
+          ? FadedWidget(
+              child: Tooltip(
+                message: callsign,
+                child: const Icon(Icons.cell_tower, color: Colors.red),
+              ),
             )
-          : const Icon(Icons.cell_tower, color: Colors.red);
+          : const FadedWidget(child: Icon(Icons.cell_tower, color: Colors.red));
     case CallReason.call:
       return callsign != null
-          ? Tooltip(
-              message: callsign,
-              child:
-                  const Icon(Icons.record_voice_over, color: Colors.deepPurple),
+          ? FadedWidget(
+              child: Tooltip(
+                message: callsign,
+                child: const Icon(Icons.record_voice_over,
+                    color: Colors.deepPurple),
+              ),
             )
-          : const Icon(Icons.record_voice_over, color: Colors.deepPurple);
+          : const FadedWidget(
+              child: Icon(Icons.record_voice_over, color: Colors.deepPurple),
+            );
     default:
       return const Icon(Icons.place, color: Colors.blue);
   }
@@ -64,7 +77,9 @@ String getQth(String message) {
       if (message.startsWith('CQ')) {
         return words.last;
       }
-      if (words[2].contains('+') || words[2].contains('-')) {
+      if (words[2].contains('+') ||
+          words[2].contains('-') ||
+          int.tryParse(words[2]) != null) {
         return '';
       }
     }

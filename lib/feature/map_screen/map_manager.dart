@@ -101,10 +101,12 @@ class MapManager {
     }
     try {
       final point = Gridlocator.decode(qth);
+      final key = Key(qth);
       Marker marker = Marker(
-        key: Key(qth),
+        key: key,
         point: LatLng(point.latitude, point.longitude),
-        child: getMapIcon(reason, callsign: callsign),
+        child: getMapIcon(reason,
+            callsign: callsign, key: key, onEnd: holder.removeMarker),
       );
       holder.addMarker(marker);
     } on Exception catch (e, s) {
