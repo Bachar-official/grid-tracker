@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_tracker/app/di.dart';
 import 'package:grid_tracker/feature/home/home_screen.dart';
 
 class App extends StatelessWidget {
@@ -7,7 +8,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      scaffoldMessengerKey: di.key,
+      home: const HomeScreen(),
     );
   }
 }
