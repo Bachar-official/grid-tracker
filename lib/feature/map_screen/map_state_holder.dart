@@ -26,6 +26,14 @@ class MapStateHolder extends StateNotifier<MapState> {
     state = state.copyWith(markers: []);
   }
 
+  void setMessages(List<Marker> messages) {
+    state = state.copyWith(messages: messages);
+  }
+
+  void clearMessages() {
+    state = state.copyWith(messages: []);
+  }
+
   void addMarker(Marker marker) {
     List<Marker> markers = state.markers;
     final index = markers.indexWhere((element) => element.key == marker.key);
@@ -45,6 +53,28 @@ class MapStateHolder extends StateNotifier<MapState> {
     if (index != -1) {
       markers.removeAt(index);
       state = state.copyWith(markers: markers);
+    }
+  }
+
+  void addMessage(Marker message) {
+    List<Marker> messages = state.messages;
+    final index = messages.indexWhere((element) => element.key == message.key);
+    if (index != -1) {
+      messages.removeAt(index);
+      messages.add(message);
+      state = state.copyWith(messages: messages);
+    } else {
+      List<Marker> newMarkers = [...state.markers, message];
+      state = state.copyWith(markers: newMarkers);
+    }
+  }
+
+  void removeMessage(Key key) {
+    List<Marker> messages = state.messages;
+    final index = messages.indexWhere((element) => element.key == key);
+    if (index != -1) {
+      messages.removeAt(index);
+      state = state.copyWith(messages: messages);
     }
   }
 }

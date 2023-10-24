@@ -16,7 +16,7 @@ class MapManager {
   final MapStateHolder holder;
   MapManager({required this.holder, required this.logger});
   final UniqueKey mapKey = UniqueKey();
-  Set<String> qths = {};
+  Map<String, String> callsigns = {};
 
   Future<void> setSocket(RawDatagramSocket socket) async {
     holder.setSocket(socket);
@@ -70,6 +70,7 @@ class MapManager {
     logger.i('Got message ${fields.join(',')}');
     for (var field in fields) {
       if (field.contains(' ')) {
+        addCallsignRecord(field, callsigns);
         final qth = getQth(field);
         if (qth != '') {
           addMarkerByQth(qth,
@@ -94,7 +95,8 @@ class MapManager {
     }
   }
 
-  void addMarkerByQth(String qth, {String? callsign, CallReason? reason}) {
+  void addMarkerByQth(String qth,
+      {String? callsign, CallReason? reason, String? message}) {
     logger.d('Try do add marker with QTH $qth');
     if (qth.length == 4) {
       qth += 'll';
@@ -106,7 +108,10 @@ class MapManager {
         key: key,
         point: LatLng(point.latitude, point.longitude),
         child: getMapIcon(reason,
-            callsign: callsign, key: key, onEnd: holder.removeMarker),
+            callsign: callsign,
+            key: key,
+            onEnd: holder.removeMarker,
+            message: message),
       );
       holder.addMarker(marker);
     } on Exception catch (e, s) {

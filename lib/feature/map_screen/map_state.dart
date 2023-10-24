@@ -7,19 +7,23 @@ import 'package:flutter_map/flutter_map.dart';
 class MapState {
   final RawDatagramSocket? socket;
   final List<Marker> markers;
+  final List<Marker> messages;
   bool get isConnected => socket != null;
 
-  const MapState({this.socket, required this.markers});
+  const MapState({this.socket, required this.markers, required this.messages});
 
   const MapState.initial()
       : socket = null,
-        markers = const [];
+        markers = const [],
+        messages = const [];
 
   MapState copyWith(
           {RawDatagramSocket? socket,
           bool nullSocket = false,
-          List<Marker>? markers}) =>
+          List<Marker>? markers,
+          List<Marker>? messages}) =>
       MapState(
           socket: nullSocket ? null : socket ?? this.socket,
-          markers: markers ?? this.markers);
+          markers: markers ?? this.markers,
+          messages: messages ?? this.messages);
 }

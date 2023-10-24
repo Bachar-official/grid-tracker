@@ -1,1 +1,1 @@
-enum CallReason { cq, call, service }
+enum CallReason { cq, call, service, message }

@@ -38,6 +38,7 @@ class MapScreen extends ConsumerWidget {
             userAgentPackageName: 'dev.fleaflet.flutter_map.example',
           ),
           MarkerLayer(markers: state.markers),
+          MarkerLayer(markers: state.messages),
         ],
       ),
     );

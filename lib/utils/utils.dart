@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_tracker/data/entity/call_reason.dart';
+import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
 
 void showSnackBar(
@@ -10,9 +11,31 @@ void showSnackBar(
   ));
 }
 
+bool isQTH(String str) {
+  RegExp regex = RegExp(r'^[A-R]{2}\d{2}$');
+  return regex.hasMatch(str);
+}
+
+bool isCallSign(String input) {
+  RegExp regex =
+      RegExp(r'^[A-Z0-9]{1,3}\d[A-Z0-9]{1,3}$', caseSensitive: false);
+
+  return regex.hasMatch(input);
+}
+
 Widget getMapIcon(CallReason? reason,
-    {String? callsign, required Key key, required Function(Key) onEnd}) {
+    {String? callsign,
+    required Key key,
+    required Function(Key) onEnd,
+    String? message}) {
   switch (reason) {
+    case CallReason.message:
+      return FadedWidget(
+        duration: const Duration(seconds: 10),
+        child: Card(
+          child: Text(message ?? ''),
+        ),
+      );
     case CallReason.service:
       return callsign != null
           ? FadedWidget(
@@ -25,8 +48,9 @@ Widget getMapIcon(CallReason? reason,
                 ),
               ),
             )
-          : const FadedWidget(
-              child: Icon(
+          : FadedWidget(
+              onEnd: () => onEnd(key),
+              child: const Icon(
                 Icons.home,
                 color: Colors.orange,
               ),
@@ -34,23 +58,29 @@ Widget getMapIcon(CallReason? reason,
     case CallReason.cq:
       return callsign != null
           ? FadedWidget(
+              onEnd: () => onEnd(key),
               child: Tooltip(
                 message: callsign,
                 child: const Icon(Icons.cell_tower, color: Colors.red),
               ),
             )
-          : const FadedWidget(child: Icon(Icons.cell_tower, color: Colors.red));
+          : FadedWidget(
+              onEnd: () => onEnd(key),
+              child: const Icon(Icons.cell_tower, color: Colors.red));
     case CallReason.call:
       return callsign != null
           ? FadedWidget(
+              onEnd: () => onEnd(key),
               child: Tooltip(
                 message: callsign,
                 child: const Icon(Icons.record_voice_over,
                     color: Colors.deepPurple),
               ),
             )
-          : const FadedWidget(
-              child: Icon(Icons.record_voice_over, color: Colors.deepPurple),
+          : FadedWidget(
+              onEnd: () => onEnd(key),
+              child:
+                  const Icon(Icons.record_voice_over, color: Colors.deepPurple),
             );
     default:
       return const Icon(Icons.place, color: Colors.blue);
@@ -64,7 +94,7 @@ CallReason? getReason(String message) {
       return CallReason.cq;
     }
     if (words[2].contains('+') || words[2].contains('-')) {
-      return null;
+      return CallReason.message;
     }
   }
   return CallReason.call;
@@ -86,6 +116,13 @@ String getQth(String message) {
     return words.last;
   } catch (e) {
     return '';
+  }
+}
+
+void addCallsignRecord(String message, Map<String, String> map) {
+  List<String> words = message.split(' ');
+  if (words.length == 3 && words[0] == 'CQ') {
+    map[words[1]] = words[2];
   }
 }
 
