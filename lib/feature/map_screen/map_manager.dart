@@ -3,15 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:grid_tracker/data/entity/call_reason.dart';
 import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 import 'package:grid_tracker/utils/utils.dart';
-import 'package:gridlocator/gridlocator.dart';
 import 'package:logger/logger.dart';
-// ignore: depend_on_referenced_packages
-import 'package:latlong2/latlong.dart';
 
 class MapManager {
   final Logger logger;
@@ -23,12 +18,18 @@ class MapManager {
   Future<void> setSocket(RawDatagramSocket socket) async {
     holder.setSocket(socket);
     if (holder.mapState.socket != null) {
-      await for (var msg in holder.mapState.socket!) {
+      // await for (var msg in holder.mapState.socket!) {
+      //   var datagram = socket.receive();
+      //   if (datagram != null) {
+      //     parseData(datagram.data);
+      //   }
+      // }
+      socket.listen((_) {
         var datagram = socket.receive();
         if (datagram != null) {
           parseData(datagram.data);
         }
-      }
+      });
     }
   }
 

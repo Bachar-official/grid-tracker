@@ -47,6 +47,7 @@ class SettingsManager {
           RawDatagramSocket socket = await RawDatagramSocket.bind(
               InternetAddress(holder.settingsState.ip),
               holder.settingsState.port);
+          socket.broadcastEnabled = true;
           mapManager.setSocket(socket);
         } catch (e) {
           logger.e(e);

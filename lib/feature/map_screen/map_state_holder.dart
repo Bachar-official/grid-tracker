@@ -49,15 +49,6 @@ class MapStateHolder extends StateNotifier<MapState> {
     }
   }
 
-  void removeMarker(Key key) {
-    List<Marker> markers = state.markers;
-    final index = markers.indexWhere((element) => element.key == key);
-    if (index != -1) {
-      markers.removeAt(index);
-      state = state.copyWith(markers: markers);
-    }
-  }
-
   void addMessage(Marker message) {
     List<Marker> messages = state.messages;
     final index = messages.indexWhere((element) => element.key == message.key);

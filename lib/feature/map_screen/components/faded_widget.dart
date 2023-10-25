@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_tracker/feature/map_screen/components/chat_bubble.dart';
 
 class FadedWidget extends StatefulWidget {
   final Widget child;
@@ -43,14 +44,12 @@ class _FadedWidgetState extends State<FadedWidget> {
           widget.child,
           widget.message != null
               ? Positioned(
-                  bottom: 10,
-                  left: 10,
+                  bottom: 20,
+                  left: 15,
                   child: AnimatedOpacity(
                     opacity: isVisible ? 1 : 0,
                     duration: const Duration(seconds: 10),
-                    child: Card(
-                      child: Text(widget.message!),
-                    ),
+                    child: OutBubble(message: widget.message ?? ''),
                   ),
                 )
               : Container(),

@@ -29,7 +29,6 @@ Widget? getMessageWidget(Message message) {
   switch (message.runtimeType) {
     case CQMessage:
       return FadedWidget(
-        key: message.key,
         message: message.rawMessage,
         child: Tooltip(
           key: message.key,
@@ -39,7 +38,6 @@ Widget? getMessageWidget(Message message) {
       );
     case QTHMessage:
       return FadedWidget(
-        key: message.key,
         message: message.rawMessage,
         child: Tooltip(
           key: message.key,
@@ -49,7 +47,6 @@ Widget? getMessageWidget(Message message) {
       );
     case ByeMessage:
       return FadedWidget(
-        key: message.key,
         message: message.rawMessage,
         child: Tooltip(
           key: message.key,
@@ -59,7 +56,6 @@ Widget? getMessageWidget(Message message) {
       );
     case PowerMessage:
       return FadedWidget(
-        key: message.key,
         message: message.rawMessage,
         child: Tooltip(
           key: message.key,
@@ -69,7 +65,6 @@ Widget? getMessageWidget(Message message) {
       );
     case RegularMessage:
       return FadedWidget(
-        key: message.key,
         message: message.rawMessage,
         child: Tooltip(
           key: message.key,
