@@ -5,10 +5,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/call_reason.dart';
+import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 import 'package:grid_tracker/utils/utils.dart';
 import 'package:gridlocator/gridlocator.dart';
 import 'package:logger/logger.dart';
+// ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
 class MapManager {
@@ -32,9 +34,7 @@ class MapManager {
 
   void parseData(Uint8List byteArray) {
     String message = formatMessage(byteArray);
-    if (byteArray.length == 124) {
-      decodeServiceMessage(message);
-    } else if (byteArray.length >= 60 && byteArray.length <= 70) {
+    if (byteArray.length >= 60 && byteArray.length <= 70) {
       decodeMessage(message);
     }
   }
@@ -67,55 +67,21 @@ class MapManager {
   void decodeMessage(String message) {
     List<String> fields =
         message.split(',').where((str) => str.isNotEmpty).toList();
-    logger.i('Got message ${fields.join(',')}');
     for (var field in fields) {
       if (field.contains(' ')) {
         addCallsignRecord(field, callsigns);
-        final qth = getQth(field);
-        if (qth != '') {
-          addMarkerByQth(qth,
-              reason: getReason(field), callsign: getCallsign(field));
+        Message msg = parseMessage(field);
+        if (msg.toMarker(callsignDict: callsigns) != null) {
+          holder.addMarker(msg.toMarker(callsignDict: callsigns)!);
         }
       }
     }
-  }
-
-  void decodeServiceMessage(String message) {
-    List<String> fields =
-        message.split(',').where((str) => str.isNotEmpty).toList();
-    String qth = fields[7];
-    addMarkerByQth(qth, reason: CallReason.service, callsign: fields[6]);
-    // 2 - mode, 6 - callsign, 7 - QTH
   }
 
   void clearSocket() {
     if (holder.mapState.socket != null) {
       holder.mapState.socket!.close();
       holder.setSocket(null);
-    }
-  }
-
-  void addMarkerByQth(String qth,
-      {String? callsign, CallReason? reason, String? message}) {
-    logger.d('Try do add marker with QTH $qth');
-    if (qth.length == 4) {
-      qth += 'll';
-    }
-    try {
-      final point = Gridlocator.decode(qth);
-      final key = Key(qth);
-      Marker marker = Marker(
-        key: key,
-        point: LatLng(point.latitude, point.longitude),
-        child: getMapIcon(reason,
-            callsign: callsign,
-            key: key,
-            onEnd: holder.removeMarker,
-            message: message),
-      );
-      holder.addMarker(marker);
-    } on Exception catch (e, s) {
-      logger.e('Error with $qth, ${e.toString()}', stackTrace: s);
     }
   }
 }

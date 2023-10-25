@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grid_tracker/data/entity/call_reason.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
+import 'package:gridlocator/gridlocator.dart';
+import 'package:latlong2/latlong.dart';
 
 void showSnackBar(
     GlobalKey<ScaffoldMessengerState> key, Color color, String message) {
@@ -23,118 +25,81 @@ bool isCallSign(String input) {
   return regex.hasMatch(input);
 }
 
-Widget getMapIcon(CallReason? reason,
-    {String? callsign,
-    required Key key,
-    required Function(Key) onEnd,
-    String? message}) {
-  switch (reason) {
-    case CallReason.message:
+Widget? getMessageWidget(Message message) {
+  switch (message.runtimeType) {
+    case CQMessage:
       return FadedWidget(
-        duration: const Duration(seconds: 10),
-        child: Card(
-          child: Text(message ?? ''),
+        key: message.key,
+        child: Tooltip(
+          message: message.callsign,
+          child: const Icon(Icons.cell_tower, color: Colors.red),
         ),
       );
-    case CallReason.service:
-      return callsign != null
-          ? FadedWidget(
-              onEnd: () => onEnd(key),
-              child: Tooltip(
-                message: callsign,
-                child: const Icon(
-                  Icons.home,
-                  color: Colors.orange,
-                ),
-              ),
-            )
-          : FadedWidget(
-              onEnd: () => onEnd(key),
-              child: const Icon(
-                Icons.home,
-                color: Colors.orange,
-              ),
-            );
-    case CallReason.cq:
-      return callsign != null
-          ? FadedWidget(
-              onEnd: () => onEnd(key),
-              child: Tooltip(
-                message: callsign,
-                child: const Icon(Icons.cell_tower, color: Colors.red),
-              ),
-            )
-          : FadedWidget(
-              onEnd: () => onEnd(key),
-              child: const Icon(Icons.cell_tower, color: Colors.red));
-    case CallReason.call:
-      return callsign != null
-          ? FadedWidget(
-              onEnd: () => onEnd(key),
-              child: Tooltip(
-                message: callsign,
-                child: const Icon(Icons.record_voice_over,
-                    color: Colors.deepPurple),
-              ),
-            )
-          : FadedWidget(
-              onEnd: () => onEnd(key),
-              child:
-                  const Icon(Icons.record_voice_over, color: Colors.deepPurple),
-            );
+    case QTHMessage:
+      return FadedWidget(
+        key: message.key,
+        child: Tooltip(
+          message: message.callsign,
+          child: const Icon(Icons.place, color: Colors.blue),
+        ),
+      );
+    case ByeMessage:
+      return FadedWidget(
+        key: message.key,
+        child: Tooltip(
+          message: message.callsign,
+          child: const Icon(Icons.waving_hand, color: Colors.grey),
+        ),
+      );
+    case PowerMessage:
+      return FadedWidget(
+        key: message.key,
+        child: Tooltip(
+          message: message.callsign,
+          child: const Icon(Icons.volume_up, color: Colors.brown),
+        ),
+      );
+    case RegularMessage:
+      return FadedWidget(
+        key: message.key,
+        child: Tooltip(
+          message: message.callsign,
+          child: const Icon(Icons.message, color: Colors.green),
+        ),
+      );
     default:
-      return const Icon(Icons.place, color: Colors.blue);
+      return null;
   }
 }
 
-CallReason? getReason(String message) {
-  List<String> words = message.split(' ');
-  if (words.length == 3) {
-    if (message.startsWith('CQ')) {
-      return CallReason.cq;
-    }
-    if (words[2].contains('+') || words[2].contains('-')) {
-      return CallReason.message;
+Marker? getMessageMarker(Message message, {Map<String, String>? callsignDict}) {
+  if (message.qth != null) {
+    try {
+      final point = Gridlocator.decode(message.qth!);
+      return Marker(
+          key: message.key,
+          point: LatLng(point.latitude, point.longitude),
+          child: getMessageWidget(message)!);
+    } catch (e) {
+      return null;
     }
   }
-  return CallReason.call;
-}
-
-String getQth(String message) {
-  try {
-    List<String> words = message.split(' ');
-    if (words.length == 3) {
-      if (message.startsWith('CQ')) {
-        return words.last;
-      }
-      if (words[2].contains('+') ||
-          words[2].contains('-') ||
-          int.tryParse(words[2]) != null) {
-        return '';
-      }
-    }
-    return words.last;
-  } catch (e) {
-    return '';
+  if (callsignDict != null && callsignDict.containsKey(message.callsign)) {
+    final point = Gridlocator.decode(callsignDict[message.callsign]!);
+    return Marker(
+        key: message.key,
+        point: LatLng(point.latitude, point.longitude),
+        child: getMessageWidget(message)!);
   }
+  return null;
 }
 
 void addCallsignRecord(String message, Map<String, String> map) {
   List<String> words = message.split(' ');
-  if (words.length == 3 && words[0] == 'CQ') {
-    map[words[1]] = words[2];
+  if (words[0] == 'CQ' && isCallSign(words[1]) && isQTH(words[2])) {
+    map[words[1]] = '${words[2]}ll';
   }
-}
-
-String? getCallsign(String message) {
-  try {
-    List<String> words = message.split(' ');
-    if (words.length == 3) {
-      return words[1];
-    } else {
-      return words[2];
-    }
-  } catch (e) {
-    return null;
+  if (isCallSign(words[0]) && isCallSign(words[1]) && isQTH(words[2])) {
+    map[words[1]] = '${words[2]}ll';
   }
 }
