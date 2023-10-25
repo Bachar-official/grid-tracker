@@ -20,7 +20,7 @@ bool isQTH(String str) {
 
 bool isCallSign(String input) {
   RegExp regex =
-      RegExp(r'^[A-Z0-9]{1,3}\d[A-Z0-9]{1,3}$', caseSensitive: false);
+      RegExp(r'^[A-Za-z0-9]{1,3}\d?[\/A-Za-z0-9]*$', caseSensitive: false);
 
   return regex.hasMatch(input);
 }
@@ -30,7 +30,9 @@ Widget? getMessageWidget(Message message) {
     case CQMessage:
       return FadedWidget(
         key: message.key,
+        message: message.rawMessage,
         child: Tooltip(
+          key: message.key,
           message: message.callsign,
           child: const Icon(Icons.cell_tower, color: Colors.red),
         ),
@@ -38,7 +40,9 @@ Widget? getMessageWidget(Message message) {
     case QTHMessage:
       return FadedWidget(
         key: message.key,
+        message: message.rawMessage,
         child: Tooltip(
+          key: message.key,
           message: message.callsign,
           child: const Icon(Icons.place, color: Colors.blue),
         ),
@@ -46,7 +50,9 @@ Widget? getMessageWidget(Message message) {
     case ByeMessage:
       return FadedWidget(
         key: message.key,
+        message: message.rawMessage,
         child: Tooltip(
+          key: message.key,
           message: message.callsign,
           child: const Icon(Icons.waving_hand, color: Colors.grey),
         ),
@@ -54,7 +60,9 @@ Widget? getMessageWidget(Message message) {
     case PowerMessage:
       return FadedWidget(
         key: message.key,
+        message: message.rawMessage,
         child: Tooltip(
+          key: message.key,
           message: message.callsign,
           child: const Icon(Icons.volume_up, color: Colors.brown),
         ),
@@ -62,7 +70,9 @@ Widget? getMessageWidget(Message message) {
     case RegularMessage:
       return FadedWidget(
         key: message.key,
+        message: message.rawMessage,
         child: Tooltip(
+          key: message.key,
           message: message.callsign,
           child: const Icon(Icons.message, color: Colors.green),
         ),
@@ -77,7 +87,7 @@ Marker? getMessageMarker(Message message, {Map<String, String>? callsignDict}) {
     try {
       final point = Gridlocator.decode(message.qth!);
       return Marker(
-          key: message.key,
+          key: UniqueKey(),
           point: LatLng(point.latitude, point.longitude),
           child: getMessageWidget(message)!);
     } catch (e) {
@@ -87,7 +97,7 @@ Marker? getMessageMarker(Message message, {Map<String, String>? callsignDict}) {
   if (callsignDict != null && callsignDict.containsKey(message.callsign)) {
     final point = Gridlocator.decode(callsignDict[message.callsign]!);
     return Marker(
-        key: message.key,
+        key: UniqueKey(),
         point: LatLng(point.latitude, point.longitude),
         child: getMessageWidget(message)!);
   }
@@ -96,7 +106,10 @@ Marker? getMessageMarker(Message message, {Map<String, String>? callsignDict}) {
 
 void addCallsignRecord(String message, Map<String, String> map) {
   List<String> words = message.split(' ');
-  if (words[0] == 'CQ' && isCallSign(words[1]) && isQTH(words[2])) {
+  if (words.length == 3 &&
+      words[0] == 'CQ' &&
+      isCallSign(words[1]) &&
+      isQTH(words[2])) {
     map[words[1]] = '${words[2]}ll';
   }
   if (isCallSign(words[0]) && isCallSign(words[1]) && isQTH(words[2])) {

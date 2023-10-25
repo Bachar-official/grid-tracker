@@ -36,7 +36,9 @@ class MapStateHolder extends StateNotifier<MapState> {
 
   void addMarker(Marker marker) {
     List<Marker> markers = state.markers;
-    final index = markers.indexWhere((element) => element.key == marker.key);
+    final index = markers.indexWhere((element) =>
+        element.point.latitude == marker.point.latitude &&
+        element.point.longitude == marker.point.longitude);
     if (index != -1) {
       markers.removeAt(index);
       markers.add(marker);
