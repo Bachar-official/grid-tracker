@@ -107,7 +107,10 @@ void addCallsignRecord(String message, Map<String, String> map) {
       isQTH(words[2])) {
     map[words[1]] = '${words[2]}ll';
   }
-  if (isCallSign(words[0]) && isCallSign(words[1]) && isQTH(words[2])) {
+  if (words.length == 3 &&
+      isCallSign(words[0]) &&
+      isCallSign(words[1]) &&
+      isQTH(words[2])) {
     map[words[1]] = '${words[2]}ll';
   }
 }
