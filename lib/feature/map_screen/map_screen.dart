@@ -41,6 +41,35 @@ class MapScreen extends ConsumerWidget {
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+            tileBuilder: state.isDarkMode
+                ? (context, child, image) => ColorFiltered(
+                      colorFilter: const ColorFilter.matrix(
+                        <double>[
+                          -1,
+                          0,
+                          0,
+                          0,
+                          255,
+                          0,
+                          -1,
+                          0,
+                          0,
+                          255,
+                          0,
+                          0,
+                          -1,
+                          0,
+                          255,
+                          0,
+                          0,
+                          0,
+                          1,
+                          0,
+                        ],
+                      ),
+                      child: child,
+                    )
+                : null,
             tileProvider: state.mapCache == null
                 ? null
                 : CachedTileProvider(store: state.mapCache!),

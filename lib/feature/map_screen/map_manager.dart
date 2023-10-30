@@ -30,6 +30,10 @@ class MapManager {
     }
   }
 
+  void setIsDarkMode(bool isDarkMode) {
+    holder.setDarkMode(isDarkMode);
+  }
+
   Future<void> setCache() async {
     try {
       final dir = await getTemporaryDirectory();

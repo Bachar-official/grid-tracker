@@ -37,6 +37,7 @@ class SettingsManager {
     portC.value = TextEditingValue(text: settingsRepository.port.toString());
     callsignC.value = TextEditingValue(text: settingsRepository.callsign);
     qthC.value = TextEditingValue(text: settingsRepository.qth);
+    mapManager.setIsDarkMode(settingsRepository.isDarkTheme);
   }
 
   bool get isConnected => mapManager.holder.mapState.isConnected;
@@ -59,6 +60,7 @@ class SettingsManager {
 
   void setMode(bool isDarkMode) {
     holder.setMode(isDarkMode);
+    mapManager.setIsDarkMode(isDarkMode);
   }
 
   void setQth(String qth) {

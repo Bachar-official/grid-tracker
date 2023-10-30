@@ -20,6 +20,10 @@ class MapStateHolder extends StateNotifier<MapState> {
     }
   }
 
+  void setDarkMode(bool isDarkMode) {
+    state = state.copyWith(isDarkMode: isDarkMode);
+  }
+
   void setMarkers(List<Marker> markers) {
     state = state.copyWith(markers: markers);
   }

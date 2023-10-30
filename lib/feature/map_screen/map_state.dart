@@ -11,10 +11,12 @@ class MapState {
   final List<Marker> markers;
   final List<Marker> messages;
   final CacheStore? mapCache;
+  final bool isDarkMode;
   bool get isConnected => socket != null;
 
   const MapState(
       {this.socket,
+      required this.isDarkMode,
       required this.markers,
       required this.messages,
       this.mapCache});
@@ -23,6 +25,7 @@ class MapState {
       : socket = null,
         markers = const [],
         mapCache = null,
+        isDarkMode = false,
         messages = const [];
 
   MapState copyWith(
@@ -31,8 +34,10 @@ class MapState {
           bool nullCache = false,
           CacheStore? mapCache,
           List<Marker>? markers,
+          bool? isDarkMode,
           List<Marker>? messages}) =>
       MapState(
+          isDarkMode: isDarkMode ?? this.isDarkMode,
           socket: nullSocket ? null : socket ?? this.socket,
           markers: markers ?? this.markers,
           messages: messages ?? this.messages,
