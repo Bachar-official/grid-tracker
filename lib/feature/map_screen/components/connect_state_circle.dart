@@ -9,9 +9,14 @@ class ConnectStateCircle extends StatelessWidget {
     return Tooltip(
       message: isConnected ? 'Connected' : 'Disconnected',
       child: Card(
-          borderRadius: BorderRadius.circular(50),
-          backgroundColor: isConnected ? Colors.green : Colors.red,
-          child: Container()),
+        borderRadius: BorderRadius.circular(50),
+        backgroundColor: isConnected ? Colors.green : Colors.red,
+        child: Icon(
+          isConnected
+              ? FluentIcons.plug_connected
+              : FluentIcons.plug_disconnected,
+        ),
+      ),
     );
   }
 }
