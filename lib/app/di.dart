@@ -36,7 +36,8 @@ class DI {
         mapManager: mapManager);
   }
 
-  void init() {
+  Future<void> init() async {
+    await mapManager.setCache();
     logger.d('DI initialized');
   }
 }

@@ -7,6 +7,8 @@ import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 import 'package:grid_tracker/utils/utils.dart';
 import 'package:logger/logger.dart';
+import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MapManager {
   final Logger logger;
@@ -18,18 +20,22 @@ class MapManager {
   Future<void> setSocket(RawDatagramSocket socket) async {
     holder.setSocket(socket);
     if (holder.mapState.socket != null) {
-      // await for (var msg in holder.mapState.socket!) {
-      //   var datagram = socket.receive();
-      //   if (datagram != null) {
-      //     parseData(datagram.data);
-      //   }
-      // }
       socket.listen((_) {
         var datagram = socket.receive();
         if (datagram != null) {
           parseData(datagram.data);
         }
       });
+    }
+  }
+
+  Future<void> setCache() async {
+    try {
+      final dir = await getTemporaryDirectory();
+      holder.setMapCache(
+          FileCacheStore('${dir.path}${Platform.pathSeparator}MapTiles'));
+    } catch (e) {
+      logger.e(e.toString());
     }
   }
 

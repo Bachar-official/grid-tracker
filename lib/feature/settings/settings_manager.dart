@@ -49,6 +49,7 @@ class SettingsManager {
               holder.settingsState.port);
           socket.broadcastEnabled = true;
           mapManager.setSocket(socket);
+          logger.i('Connected');
         } catch (e) {
           logger.e(e);
           showSnackBar(key, Colors.red, 'Error while connecting to UDP');
@@ -56,9 +57,10 @@ class SettingsManager {
       } else {
         logger.d('Disconnecting from server');
         mapManager.clearSocket();
+        logger.i('Disconnected');
       }
+      // Go to Map screen
+      homeManager.setPage(0);
     }
-    // Go to Map screen
-    homeManager.setPage(0);
   }
 }

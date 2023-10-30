@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class MapStateHolder extends StateNotifier<MapState> {
   MapStateHolder() : super(const MapState.initial());
@@ -68,6 +69,14 @@ class MapStateHolder extends StateNotifier<MapState> {
     if (index != -1) {
       messages.removeAt(index);
       state = state.copyWith(messages: messages);
+    }
+  }
+
+  void setMapCache(CacheStore? mapCache) {
+    if (mapCache == null) {
+      state = state.copyWith(nullCache: true, mapCache: null);
+    } else {
+      state = state.copyWith(mapCache: mapCache);
     }
   }
 }

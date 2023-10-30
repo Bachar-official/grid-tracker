@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide FilledButton;
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
 import 'package:grid_tracker/feature/settings/settings_holder.dart';
 import 'package:grid_tracker/feature/settings/settings_state.dart';
+import 'package:grid_tracker/utils/validators.dart';
 import 'package:riverpod/riverpod.dart';
 
 final provider = StateNotifierProvider<SettingsStateHolder, SettingsState>(
@@ -16,34 +18,43 @@ class SettingsScreen extends ConsumerWidget {
     final state = ref.watch(provider);
     final manager = di.settingsManager;
 
-    return Drawer(
-      child: Padding(
+    return ScaffoldPage(
+      header: const PageHeader(
+        title: Text('Settings'),
+      ),
+      content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Form(
             key: manager.formKey,
             child: Column(
               children: [
-                TextFormField(
-                  controller: manager.ipC,
-                  decoration: const InputDecoration(
-                    label: Text('IP address'),
+                InfoLabel(
+                  label: 'IP address',
+                  child: TextFormBox(
+                    readOnly: manager.isConnected,
+                    placeholder: 'IP address',
+                    controller: manager.ipC,
+                    onChanged: manager.setIp,
+                    validator: validateIp,
                   ),
-                  onChanged: manager.setIp,
                 ),
-                TextFormField(
-                  controller: manager.portC,
-                  decoration: const InputDecoration(
-                    label: Text('Port'),
+                InfoLabel(
+                  label: 'Port',
+                  child: TextFormBox(
+                    readOnly: manager.isConnected,
+                    placeholder: 'Port',
+                    controller: manager.portC,
+                    onChanged: manager.setPort,
+                    validator: validatePort,
                   ),
-                  onChanged: manager.setPort,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    manager.setAddress();
-                    Navigator.pop(context);
-                  },
-                  child: Text(manager.isConnected ? 'Disconnect' : 'Connect'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: FilledButton(
+                    onPressed: manager.setAddress,
+                    child: Text(manager.isConnected ? 'Disconnect' : 'Connect'),
+                  ),
                 ),
               ],
             ),
