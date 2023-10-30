@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' hide IconButton, Tooltip, Colors;
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
@@ -7,29 +7,24 @@ import 'package:gridlocator/gridlocator.dart';
 // ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
-void showSnackBar(
-    GlobalKey<ScaffoldMessengerState> key, Color color, String message) {
-  key.currentState!.showSnackBar(SnackBar(
-    backgroundColor: color,
-    content: Text(message),
-  ));
-}
-
 void showInfoBar(
     {required GlobalKey<NavigatorState> key,
     required InfoBarSeverity severity,
     required String title,
     required String message}) {
-  displayInfoBar(key.currentState!.context,
-      builder: (context, close) => InfoBar(
-            title: Text(title),
-            content: Text(message),
-            action: IconButton(
-              icon: const Icon(FluentIcons.clear),
-              onPressed: close,
-            ),
-            severity: severity,
-          ));
+  if (key.currentContext!.mounted) {
+    showBottomSheet(
+      context: key.currentContext!,
+      builder: (context) => InfoBar(
+        title: Text(title),
+        content: Text(message),
+        severity: severity,
+        onClose: () => Navigator.pop(context),
+      ),
+    );
+    Future.delayed(
+        const Duration(seconds: 3), () => Navigator.pop(key.currentContext!));
+  }
 }
 
 bool isQTH(String str) {

@@ -38,6 +38,7 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       pane: NavigationPane(
+        size: const NavigationPaneSize(openMaxWidth: 150),
         selected: state.page,
         onChanged: manager.setPage,
         displayMode: PaneDisplayMode.auto,

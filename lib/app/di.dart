@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_tracker/data/repository/settings_repository.dart';
 import 'package:grid_tracker/feature/home/home_manager.dart';
 import 'package:grid_tracker/feature/home/home_state_holder.dart';
 import 'package:grid_tracker/feature/map_screen/map_manager.dart';
@@ -10,6 +11,7 @@ import 'package:logger/logger.dart';
 class DI {
   late final GlobalKey<NavigatorState> key;
   late final Logger logger;
+  late final SettingsRepository settingsRepository;
 
   late final HomeManager homeManager;
   late final HomeStateHolder homeHolder;
@@ -23,12 +25,14 @@ class DI {
   DI() {
     key = GlobalKey<NavigatorState>();
     logger = Logger();
+    settingsRepository = SettingsRepository();
     homeHolder = HomeStateHolder();
     homeManager = HomeManager(holder: homeHolder, key: key, logger: logger);
     mapHolder = MapStateHolder();
     mapManager = MapManager(holder: mapHolder, logger: logger);
     settingsHolder = SettingsStateHolder();
     settingsManager = SettingsManager(
+        settingsRepository: settingsRepository,
         homeManager: homeManager,
         holder: settingsHolder,
         logger: logger,

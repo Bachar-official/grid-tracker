@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
+import 'package:grid_tracker/feature/map_screen/components/connect_state_circle.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 // ignore: depend_on_referenced_packages
@@ -25,19 +26,15 @@ class MapScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(50),
-              ),
-              backgroundColor: state.isConnected ? Colors.green : Colors.red,
-              child: Container(),
+            ConnectStateCircle(
+              isConnected: state.isConnected,
             )
           ],
         ),
       ),
       content: FlutterMap(
         options: const MapOptions(
-          initialCenter: LatLng(0, 0),
+          initialCenter: LatLng(0, 30.51),
           initialZoom: 2,
         ),
         children: [

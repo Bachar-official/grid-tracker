@@ -13,48 +13,96 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final state = ref.watch(provider);
+    final state = ref.watch(provider);
     final manager = di.settingsManager;
+
+    Typography typography = FluentTheme.of(context).typography;
 
     return ScaffoldPage(
       header: const PageHeader(
         title: Text('Settings'),
       ),
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Form(
-            key: manager.formKey,
-            child: Column(
-              children: [
-                InfoLabel(
-                  label: 'IP address',
-                  child: TextFormBox(
-                    readOnly: manager.isConnected,
-                    placeholder: 'IP address',
-                    controller: manager.ipC,
-                    onChanged: manager.setIp,
-                    validator: validateIp,
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Form(
+              key: manager.formKey,
+              child: Column(
+                children: [
+                  Text(
+                    'User settings',
+                    style: typography.subtitle,
                   ),
-                ),
-                InfoLabel(
-                  label: 'Port',
-                  child: TextFormBox(
-                    readOnly: manager.isConnected,
-                    placeholder: 'Port',
-                    controller: manager.portC,
-                    onChanged: manager.setPort,
-                    validator: validatePort,
+                  InfoLabel(
+                    label: 'Callsign',
+                    child: TextFormBox(
+                      placeholder: 'Callsign',
+                      controller: manager.callsignC,
+                      onChanged: manager.setCallsign,
+                      validator: validateCallsign,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: FilledButton(
-                    onPressed: manager.setAddress,
-                    child: Text(manager.isConnected ? 'Disconnect' : 'Connect'),
+                  InfoLabel(
+                    label: 'QTH locator',
+                    child: TextFormBox(
+                      placeholder: 'QTH locator',
+                      controller: manager.qthC,
+                      onChanged: manager.setQth,
+                      validator: validateQth,
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ToggleSwitch(
+                        content: const Text('Dark mode'),
+                        checked: state.isDarkTheme,
+                        onChanged: manager.setMode),
+                  ),
+                  const Divider(),
+                  Text(
+                    'Net settings',
+                    style: typography.subtitle,
+                  ),
+                  InfoLabel(
+                    label: 'IP address',
+                    child: TextFormBox(
+                      readOnly: manager.isConnected,
+                      placeholder: 'IP address',
+                      controller: manager.ipC,
+                      onChanged: manager.setIp,
+                      validator: validateIp,
+                    ),
+                  ),
+                  InfoLabel(
+                    label: 'Port',
+                    child: TextFormBox(
+                      readOnly: manager.isConnected,
+                      placeholder: 'Port',
+                      controller: manager.portC,
+                      onChanged: manager.setPort,
+                      validator: validatePort,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        FilledButton(
+                          onPressed: manager.setAddress,
+                          child: Text(
+                              manager.isConnected ? 'Disconnect' : 'Connect'),
+                        ),
+                        FilledButton(
+                          onPressed: manager.saveSettings,
+                          child: const Text('Save settings'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
