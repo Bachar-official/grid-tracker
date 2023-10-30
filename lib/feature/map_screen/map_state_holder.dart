@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:riverpod/riverpod.dart';
+// ignore: depend_on_referenced_packages
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class MapStateHolder extends StateNotifier<MapState> {

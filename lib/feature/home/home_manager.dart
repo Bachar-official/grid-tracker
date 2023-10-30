@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 class HomeManager {
   final HomeStateHolder holder;
   final Logger logger;
-  final GlobalKey<ScaffoldMessengerState> key;
+  final GlobalKey<NavigatorState> key;
 
   HomeManager({required this.holder, required this.key, required this.logger});
 

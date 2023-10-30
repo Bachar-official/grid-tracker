@@ -8,6 +8,7 @@ import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 import 'package:grid_tracker/utils/utils.dart';
 import 'package:logger/logger.dart';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 
 class MapManager {

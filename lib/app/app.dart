@@ -8,7 +8,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
-      // scaffoldMessengerKey: di.key,
+      navigatorKey: di.key,
       home: const HomeScreen(),
     );
   }

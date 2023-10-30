@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:grid_tracker/feature/home/home_manager.dart';
 import 'package:grid_tracker/feature/map_screen/map_manager.dart';
 import 'package:grid_tracker/feature/settings/settings_holder.dart';
@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 class SettingsManager {
   final Logger logger;
   final SettingsStateHolder holder;
-  final GlobalKey<ScaffoldMessengerState> key;
+  final GlobalKey<NavigatorState> key;
   final MapManager mapManager;
   final HomeManager homeManager;
   final TextEditingController ipC = TextEditingController();
@@ -52,7 +52,11 @@ class SettingsManager {
           logger.i('Connected');
         } catch (e) {
           logger.e(e);
-          showSnackBar(key, Colors.red, 'Error while connecting to UDP');
+          showInfoBar(
+              key: key,
+              severity: InfoBarSeverity.error,
+              title: 'Ошибка',
+              message: e.toString());
         }
       } else {
         logger.d('Disconnecting from server');

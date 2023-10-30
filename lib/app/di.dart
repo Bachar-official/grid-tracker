@@ -8,7 +8,7 @@ import 'package:grid_tracker/feature/settings/settings_manager.dart';
 import 'package:logger/logger.dart';
 
 class DI {
-  late final GlobalKey<ScaffoldMessengerState> key;
+  late final GlobalKey<NavigatorState> key;
   late final Logger logger;
 
   late final HomeManager homeManager;
@@ -21,7 +21,7 @@ class DI {
   late final SettingsManager settingsManager;
 
   DI() {
-    key = GlobalKey<ScaffoldMessengerState>();
+    key = GlobalKey<NavigatorState>();
     logger = Logger();
     homeHolder = HomeStateHolder();
     homeManager = HomeManager(holder: homeHolder, key: key, logger: logger);

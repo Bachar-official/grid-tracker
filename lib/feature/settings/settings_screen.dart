@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart' hide FilledButton;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
 import 'package:grid_tracker/feature/settings/settings_holder.dart';
 import 'package:grid_tracker/feature/settings/settings_state.dart';
 import 'package:grid_tracker/utils/validators.dart';
-import 'package:riverpod/riverpod.dart';
 
 final provider = StateNotifierProvider<SettingsStateHolder, SettingsState>(
     (ref) => di.settingsHolder);
@@ -15,7 +13,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(provider);
+    // final state = ref.watch(provider);
     final manager = di.settingsManager;
 
     return ScaffoldPage(

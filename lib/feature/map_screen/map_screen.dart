@@ -1,11 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' hide Colors, Card;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
+// ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
 final provider =
@@ -17,7 +17,6 @@ class MapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(provider);
-    final manager = di.mapManager;
 
     return ScaffoldPage(
       header: PageHeader(

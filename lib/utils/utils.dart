@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' hide IconButton, Tooltip, Colors;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
 import 'package:gridlocator/gridlocator.dart';
+// ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
 void showSnackBar(
@@ -11,6 +13,23 @@ void showSnackBar(
     backgroundColor: color,
     content: Text(message),
   ));
+}
+
+void showInfoBar(
+    {required GlobalKey<NavigatorState> key,
+    required InfoBarSeverity severity,
+    required String title,
+    required String message}) {
+  displayInfoBar(key.currentState!.context,
+      builder: (context, close) => InfoBar(
+            title: Text(title),
+            content: Text(message),
+            action: IconButton(
+              icon: const Icon(FluentIcons.clear),
+              onPressed: close,
+            ),
+            severity: severity,
+          ));
 }
 
 bool isQTH(String str) {
@@ -33,7 +52,7 @@ Widget? getMessageWidget(Message message) {
         child: Tooltip(
           key: message.key,
           message: message.callsign,
-          child: const Icon(Icons.cell_tower, color: Colors.red),
+          child: Icon(Icons.cell_tower, color: Colors.red),
         ),
       );
     case QTHMessage:
@@ -42,7 +61,7 @@ Widget? getMessageWidget(Message message) {
         child: Tooltip(
           key: message.key,
           message: message.callsign,
-          child: const Icon(Icons.place, color: Colors.blue),
+          child: Icon(Icons.place, color: Colors.blue),
         ),
       );
     case ByeMessage:
@@ -60,7 +79,7 @@ Widget? getMessageWidget(Message message) {
         child: Tooltip(
           key: message.key,
           message: message.callsign,
-          child: const Icon(Icons.volume_up, color: Colors.brown),
+          child: Icon(Icons.volume_up, color: Colors.orange),
         ),
       );
     case RegularMessage:
@@ -69,7 +88,7 @@ Widget? getMessageWidget(Message message) {
         child: Tooltip(
           key: message.key,
           message: message.callsign,
-          child: const Icon(Icons.message, color: Colors.green),
+          child: Icon(Icons.message, color: Colors.green),
         ),
       );
     default:
