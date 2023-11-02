@@ -31,13 +31,15 @@ class SettingsManager {
     setCallsign(settingsRepository.callsign);
     setIp(settingsRepository.ip);
     setPort(settingsRepository.port.toString());
-    setQth(settingsRepository.port.toString());
+    setQth(settingsRepository.qth.toString());
     setMode(settingsRepository.isDarkTheme);
+    setDistanceMeasure(settingsRepository.isKilometers);
     ipC.value = TextEditingValue(text: settingsRepository.ip);
     portC.value = TextEditingValue(text: settingsRepository.port.toString());
     callsignC.value = TextEditingValue(text: settingsRepository.callsign);
     qthC.value = TextEditingValue(text: settingsRepository.qth);
     mapManager.setIsDarkMode(settingsRepository.isDarkTheme);
+    mapManager.setMyQth(settingsRepository.qth);
   }
 
   bool get isConnected => mapManager.holder.mapState.isConnected;
@@ -68,6 +70,9 @@ class SettingsManager {
       holder.setQth(qth);
     }
   }
+
+  void setDistanceMeasure(bool inKilometers) =>
+      holder.setDistanceMeasure(inKilometers);
 
   Future<void> setAddress() async {
     if (formKey.currentState!.validate()) {

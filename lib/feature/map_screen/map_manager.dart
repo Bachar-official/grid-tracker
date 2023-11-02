@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:grid_tracker/data/entity/message.dart';
+import 'package:grid_tracker/data/entity/qso.dart';
+import 'package:grid_tracker/feature/history/history_manager.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
 import 'package:grid_tracker/utils/utils.dart';
 import 'package:logger/logger.dart';
@@ -14,7 +16,11 @@ import 'package:path_provider/path_provider.dart';
 class MapManager {
   final Logger logger;
   final MapStateHolder holder;
-  MapManager({required this.holder, required this.logger});
+  final HistoryManager historyManager;
+  MapManager(
+      {required this.holder,
+      required this.logger,
+      required this.historyManager});
   final UniqueKey mapKey = UniqueKey();
   Map<String, String> callsigns = {};
 
@@ -29,6 +35,8 @@ class MapManager {
       });
     }
   }
+
+  void setMyQth(String myQth) => holder.setMyQth(myQth);
 
   void setIsDarkMode(bool isDarkMode) {
     holder.setDarkMode(isDarkMode);
@@ -81,8 +89,12 @@ class MapManager {
         message.split(',').where((str) => str.isNotEmpty).toList();
     for (var field in fields) {
       if (field.contains(' ')) {
+        QSO? qso = getMessageQso(field, callsigns);
         addCallsignRecord(field, callsigns);
         Message msg = parseMessage(field);
+        if (qso != null) {
+          historyManager.addQso(qso);
+        }
         if (msg.toMarker(callsignDict: callsigns) != null) {
           holder.addMarker(msg.toMarker(callsignDict: callsigns)!);
         }

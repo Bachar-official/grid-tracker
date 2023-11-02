@@ -27,4 +27,8 @@ class SettingsStateHolder extends StateNotifier<SettingsState> {
     state = state.copyWith(
         themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light);
   }
+
+  void setDistanceMeasure(bool inKilometers) {
+    state = state.copyWith(inKilometers: inKilometers);
+  }
 }

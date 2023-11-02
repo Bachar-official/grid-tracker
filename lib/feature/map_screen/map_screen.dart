@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grid_tracker/app/di.dart';
+import 'package:grid_tracker/data/constants/constants.dart';
 import 'package:grid_tracker/feature/map_screen/components/connect_state_circle.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:grid_tracker/feature/map_screen/map_state_holder.dart';
@@ -43,30 +44,7 @@ class MapScreen extends ConsumerWidget {
             userAgentPackageName: 'dev.fleaflet.flutter_map.example',
             tileBuilder: state.isDarkMode
                 ? (context, child, image) => ColorFiltered(
-                      colorFilter: const ColorFilter.matrix(
-                        <double>[
-                          -1,
-                          0,
-                          0,
-                          0,
-                          255,
-                          0,
-                          -1,
-                          0,
-                          0,
-                          255,
-                          0,
-                          0,
-                          -1,
-                          0,
-                          255,
-                          0,
-                          0,
-                          0,
-                          1,
-                          0,
-                        ],
-                      ),
+                      colorFilter: const ColorFilter.matrix(invertMatrix),
                       child: child,
                     )
                 : null,

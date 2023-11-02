@@ -55,6 +55,15 @@ class SettingsScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ToggleSwitch(
+                        content: Text(state.inKilometers
+                            ? 'Distance in kilometers'
+                            : 'Distance in miles'),
+                        checked: state.inKilometers,
+                        onChanged: manager.setDistanceMeasure),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ToggleSwitch(
                         content: const Text('Dark mode'),
                         checked: state.isDarkTheme,
                         onChanged: manager.setMode),

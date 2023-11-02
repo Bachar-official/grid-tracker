@@ -46,6 +46,7 @@ dependencies:
   dio_cache_interceptor_file_store: ^1.2.2
   fluent_ui: ^4.7.6
   window_manager: ^0.3.7
+  country_code: ^1.0.0
 
 dev_dependencies:
   flutter_test:

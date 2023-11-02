@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/message.dart';
+import 'package:grid_tracker/data/entity/qso.dart';
 import 'package:grid_tracker/feature/map_screen/components/faded_widget.dart';
 import 'package:gridlocator/gridlocator.dart';
 // ignore: depend_on_referenced_packages
@@ -127,4 +128,23 @@ void addCallsignRecord(String message, Map<String, String> map) {
       isQTH(words[2])) {
     map[words[1]] = '${words[2]}ll';
   }
+}
+
+QSO? getMessageQso(String message, Map<String, String> map) {
+  List<String> words = message.split(' ');
+  if (words.length == 3 &&
+      words[0] == 'CQ' &&
+      isCallSign(words[1]) &&
+      isQTH(words[2]) &&
+      !map.containsKey(words[1])) {
+    return QSO(callsign: words[1], qth: words[2], time: DateTime.now());
+  }
+  if (words.length == 3 &&
+      isCallSign(words[0]) &&
+      isCallSign(words[1]) &&
+      isQTH(words[2]) &&
+      !map.containsKey(words[1])) {
+    return QSO(callsign: words[1], qth: words[2], time: DateTime.now());
+  }
+  return null;
 }

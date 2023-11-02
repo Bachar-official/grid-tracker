@@ -40,6 +40,10 @@ class MapStateHolder extends StateNotifier<MapState> {
     state = state.copyWith(messages: []);
   }
 
+  void setMyQth(String myQth) {
+    state = state.copyWith(myQth: myQth);
+  }
+
   void addMarker(Marker marker) {
     List<Marker> markers = state.markers;
     final index = markers.indexWhere((element) =>

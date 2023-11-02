@@ -12,10 +12,12 @@ class MapState {
   final List<Marker> messages;
   final CacheStore? mapCache;
   final bool isDarkMode;
+  final String myQth;
   bool get isConnected => socket != null;
 
   const MapState(
       {this.socket,
+      required this.myQth,
       required this.isDarkMode,
       required this.markers,
       required this.messages,
@@ -25,6 +27,7 @@ class MapState {
       : socket = null,
         markers = const [],
         mapCache = null,
+        myQth = '',
         isDarkMode = false,
         messages = const [];
 
@@ -34,10 +37,12 @@ class MapState {
           bool nullCache = false,
           CacheStore? mapCache,
           List<Marker>? markers,
+          String? myQth,
           bool? isDarkMode,
           List<Marker>? messages}) =>
       MapState(
           isDarkMode: isDarkMode ?? this.isDarkMode,
+          myQth: myQth ?? this.myQth,
           socket: nullSocket ? null : socket ?? this.socket,
           markers: markers ?? this.markers,
           messages: messages ?? this.messages,

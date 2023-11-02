@@ -8,6 +8,7 @@ class SettingsRepository {
   final _callsign = 'callsign';
   final _qth = 'qth';
   final _darkTheme = 'darkTheme';
+  final _kilometers = 'km';
 
   SettingsRepository() {
     _settingsBox = Hive.box('grid-settings');
@@ -18,6 +19,7 @@ class SettingsRepository {
   String get callsign => _getCallsign();
   String get qth => _getQth();
   bool get isDarkTheme => _getIsDarkTheme();
+  bool get isKilometers => _getIsKilometers();
 
   String _getIp() {
     return _settingsBox.get(_ip, defaultValue: '127.0.0.1');
@@ -39,6 +41,10 @@ class SettingsRepository {
     return _settingsBox.get(_darkTheme, defaultValue: false);
   }
 
+  bool _getIsKilometers() {
+    return _settingsBox.get(_kilometers, defaultValue: true);
+  }
+
   void setIp(String ip) {
     _settingsBox.put(_ip, ip);
   }
@@ -57,5 +63,9 @@ class SettingsRepository {
 
   void setDarkTheme(bool isDarkTheme) {
     _settingsBox.put(_darkTheme, isDarkTheme);
+  }
+
+  void setKilometers(bool isKilometers) {
+    _settingsBox.put(_kilometers, isKilometers);
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grid_tracker/data/repository/settings_repository.dart';
+import 'package:grid_tracker/feature/history/history_manager.dart';
+import 'package:grid_tracker/feature/history/history_state_holder.dart';
 import 'package:grid_tracker/feature/home/home_manager.dart';
 import 'package:grid_tracker/feature/home/home_state_holder.dart';
 import 'package:grid_tracker/feature/map_screen/map_manager.dart';
@@ -22,14 +24,21 @@ class DI {
   late final SettingsStateHolder settingsHolder;
   late final SettingsManager settingsManager;
 
+  late final HistoryStateHolder historyHolder;
+  late final HistoryManager historyManager;
+
   DI() {
     key = GlobalKey<NavigatorState>();
     logger = Logger();
     settingsRepository = SettingsRepository();
     homeHolder = HomeStateHolder();
     homeManager = HomeManager(holder: homeHolder, key: key, logger: logger);
+    historyHolder = HistoryStateHolder();
+    historyManager = HistoryManager(
+        holder: historyHolder, settingsRepository: settingsRepository);
     mapHolder = MapStateHolder();
-    mapManager = MapManager(holder: mapHolder, logger: logger);
+    mapManager = MapManager(
+        holder: mapHolder, logger: logger, historyManager: historyManager);
     settingsHolder = SettingsStateHolder();
     settingsManager = SettingsManager(
         settingsRepository: settingsRepository,
