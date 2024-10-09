@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/material.dart' show Icons, showModalBottomSheet;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/data/entity/qso.dart';
@@ -13,14 +13,13 @@ void showInfoBar(
     required InfoBarSeverity severity,
     required String title,
     required String message}) {
-  if (key.currentContext!.mounted) {
-    showBottomSheet(
+  if (key.currentContext != null && key.currentContext!.mounted) {
+    showModalBottomSheet(
       context: key.currentContext!,
       builder: (context) => InfoBar(
         title: Text(title),
         content: Text(message),
         severity: severity,
-        onClose: () => Navigator.pop(context),
       ),
     );
     Future.delayed(

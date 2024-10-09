@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class OutBubble extends StatelessWidget {
   final String message;
-  const OutBubble({Key? key, required this.message}) : super(key: key);
+  const OutBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
