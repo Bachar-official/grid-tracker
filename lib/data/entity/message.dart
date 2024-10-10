@@ -19,6 +19,7 @@ Message parseMessage(String msg) {
         int.tryParse(words[2]) != null) {
       return PowerMessage(rawMessage: msg, callsign: words[1]);
     }
+    return RegularMessage(rawMessage: msg, callsign: words[1]);
   }
   return RegularMessage(rawMessage: msg, callsign: words[1]);
 }
@@ -30,6 +31,22 @@ abstract class Message {
   late final String? qth;
   Message({required this.rawMessage, required this.callsign});
   Marker? toMarker({Map<String, String>? callsignDict});
+}
+
+class FeedMessage extends Message {
+  final DateTime time;
+  FeedMessage({
+    required super.rawMessage,
+    required this.time,
+    required super.callsign,
+  });
+
+  @override
+  Marker? toMarker({Map<String, String>? callsignDict}) => null;
+
+  FeedMessage.fromMessage(Message message)
+      : time = DateTime.now(),
+        super(rawMessage: message.rawMessage, callsign: message.callsign);
 }
 
 class CQMessage extends Message {

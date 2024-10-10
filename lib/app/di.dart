@@ -38,7 +38,10 @@ class DI {
         holder: historyHolder, settingsRepository: settingsRepository);
     mapHolder = MapStateHolder();
     mapManager = MapManager(
-        holder: mapHolder, logger: logger, historyManager: historyManager);
+        holder: mapHolder,
+        logger: logger,
+        historyManager: historyManager,
+        key: key);
     settingsHolder = SettingsStateHolder();
     settingsManager = SettingsManager(
         settingsRepository: settingsRepository,

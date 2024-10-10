@@ -23,7 +23,10 @@ void showInfoBar(
       ),
     );
     Future.delayed(
-        const Duration(seconds: 3), () => Navigator.pop(key.currentContext!));
+        const Duration(seconds: 3),
+        () => Navigator.canPop(key.currentContext!)
+            ? Navigator.pop(key.currentContext!)
+            : null);
   }
 }
 

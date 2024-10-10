@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:grid_tracker/data/entity/message.dart';
 import 'package:grid_tracker/feature/map_screen/map_state.dart';
 import 'package:riverpod/riverpod.dart';
 // ignore: depend_on_referenced_packages
@@ -87,5 +88,18 @@ class MapStateHolder extends StateNotifier<MapState> {
     } else {
       state = state.copyWith(mapCache: mapCache);
     }
+  }
+
+  void addMessageToFeed(FeedMessage message) {
+    final newFeed = [...state.feed, message];
+    state = state.copyWith(feed: newFeed);
+  }
+
+  void clearFeed() {
+    state = state.copyWith(feed: []);
+  }
+
+  void toggleFeed(bool isExpanded) {
+    state = state.copyWith(isFeedExpanded: isExpanded);
   }
 }

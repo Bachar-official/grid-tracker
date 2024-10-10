@@ -17,22 +17,31 @@ class MapManager {
   final Logger logger;
   final MapStateHolder holder;
   final HistoryManager historyManager;
+  final GlobalKey<NavigatorState> key;
   MapManager(
       {required this.holder,
+      required this.key,
       required this.logger,
       required this.historyManager});
   final UniqueKey mapKey = UniqueKey();
   Map<String, String> callsigns = {};
+  final ScrollController scrollController = ScrollController();
 
   Future<void> setSocket(RawDatagramSocket socket) async {
     holder.setSocket(socket);
     if (holder.mapState.socket != null) {
-      socket.listen((_) {
+      // socket.listen((_) {
+      //   var datagram = socket.receive();
+      //   if (datagram != null) {
+      //     parseData(datagram.data);
+      //   }
+      // });
+      await for (var _ in socket) {
         var datagram = socket.receive();
         if (datagram != null) {
           parseData(datagram.data);
         }
-      });
+      }
     }
   }
 
@@ -92,6 +101,7 @@ class MapManager {
         QSO? qso = getMessageQso(field, callsigns);
         addCallsignRecord(field, callsigns);
         Message msg = parseMessage(field);
+        addMessageToFeed(msg);
         if (qso != null) {
           historyManager.addQso(qso);
         }
@@ -102,10 +112,25 @@ class MapManager {
     }
   }
 
+  void addMessageToFeed(Message message) {
+    holder.addMessageToFeed(FeedMessage.fromMessage(message));
+    if (holder.mapState.isFeedExpanded && scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent, // Прокрутить до конца
+        duration: const Duration(milliseconds: 300), // Длительность анимации
+        curve: Curves.easeOut, // Кривая анимации
+      );
+    }
+  }
+
   void clearSocket() {
     if (holder.mapState.socket != null) {
       holder.mapState.socket!.close();
       holder.setSocket(null);
     }
+  }
+
+  void toggleFeed() {
+    holder.toggleFeed(!holder.mapState.isFeedExpanded);
   }
 }
